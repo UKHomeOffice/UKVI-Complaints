@@ -22,17 +22,20 @@
     "lint:app": "eslint .",
     "lint:acceptance": "eslint --no-ignore -c ./node_modules/so-acceptance/.eslintrc ./apps/**/acceptance/**/*.js",
     "prepareapp": "hof-build",
-    "postinstall": "bash -c 'if [[ ${NODE_ENV} != production ]]; then npm run prepareapp; fi;'"
+    "postinstall": "bash -c 'if [[ ${NODE_ENV} != production ]]; then npm run prepareapp; fi;'",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
     "hof": "^12.0.0",
     "hof-build": "^1.3.1",
     "hof-controllers": "^6.0.3",
     "hof-theme-govuk": "^2.0.2",
-    "jquery": "^2.1.4",
+    "jquery": "^3.0.0",
     "lodash": "^4.17.4",
     "moment": "^2.17.1",
-    "typeahead-aria": "^1.0.1"
+    "typeahead-aria": "^1.0.1",
+    "snyk": "^1.97.0"
   },
   "devDependencies": {
     "chai": "^3.0.0",
@@ -54,5 +57,6 @@
   "pre-commit": [
     "lint",
     "test"
-  ]
+  ],
+  "snyk": true
 }
