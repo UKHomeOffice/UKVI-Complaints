@@ -1,0 +1,38 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.13.5
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  SNYK-JS-LODASH-450202:
+    - hof-build > hof-transpiler > lodash:
+        patched: '2019-07-03T21:54:45.705Z'
+    - lodash:
+        patched: '2019-07-03T21:54:45.705Z'
+    - hof > lodash:
+        patched: '2019-07-03T21:54:45.705Z'
+    - hof-theme-govuk > hof-template-partials > lodash:
+        patched: '2019-07-03T21:54:45.705Z'
+    - hof > hof-form-wizard > lodash:
+        patched: '2019-07-03T21:54:45.705Z'
+    - hof > hof-middleware > lodash:
+        patched: '2019-07-03T21:54:45.705Z'
+    - hof > hof-middleware-markdown > lodash:
+        patched: '2019-07-03T21:54:45.705Z'
+    - hof-controllers > hof-emailer > lodash:
+        patched: '2019-07-03T21:54:45.705Z'
+    - hof-controllers > lodash:
+        patched: '2019-07-03T21:54:45.705Z'
+    - hof > hof-form-wizard > hof-model > lodash:
+        patched: '2019-07-03T21:54:45.705Z'
+    - hof > hof-form-wizard > hof-form-controller > lodash:
+        patched: '2019-07-03T21:54:45.705Z'
+    - hof > hof-theme-govuk > hof-template-partials > lodash:
+        patched: '2019-07-03T21:54:45.705Z'
+    - hof > hof-form-wizard > hof-form-controller > hof-behaviour-session > lodash:
+        patched: '2019-07-03T21:54:45.705Z'
+    - hof-build > npm-sass > node-sass > sass-graph > lodash:
+        patched: '2019-07-03T21:54:45.705Z'
+    - hof > hof-form-wizard > hof-form-controller > hof-behaviour-hooks > lodash:
+        patched: '2019-07-03T21:54:45.705Z'
+    - hof-build > npm-sass > node-sass > gaze > globule > lodash:
+        patched: '2019-07-03T21:54:45.705Z'
