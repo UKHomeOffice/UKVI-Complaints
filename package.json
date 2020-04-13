@@ -30,7 +30,7 @@
     "hof-controllers": "^6.0.3",
     "hof-theme-govuk": "^2.0.2",
     "deprecate": "1.0.0",
-    "jquery": "^2.1.4",
+    "jquery": "^3.5.0",
     "lodash": "^4.17.4",
     "moment": "^2.17.1",
     "typeahead-aria": "^1.0.1"
