@@ -1,0 +1,38 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.14.1
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  SNYK-JS-LODASH-567746:
+    - lodash:
+        patched: '2020-05-04T03:59:17.171Z'
+    - hof > lodash:
+        patched: '2020-05-04T03:59:17.171Z'
+    - hof-controllers > lodash:
+        patched: '2020-05-04T03:59:17.171Z'
+    - hof > hof-form-wizard > lodash:
+        patched: '2020-05-04T03:59:17.171Z'
+    - hof > hof-middleware > lodash:
+        patched: '2020-05-04T03:59:17.171Z'
+    - hof > hof-middleware-markdown > lodash:
+        patched: '2020-05-04T03:59:17.171Z'
+    - hof-theme-govuk > hof-template-partials > lodash:
+        patched: '2020-05-04T03:59:17.171Z'
+    - hof-build > hof-transpiler > lodash:
+        patched: '2020-05-04T03:59:17.171Z'
+    - hof-controllers > hof-emailer > lodash:
+        patched: '2020-05-04T03:59:17.171Z'
+    - hof > hof-form-wizard > hof-form-controller > lodash:
+        patched: '2020-05-04T03:59:17.171Z'
+    - hof > hof-form-wizard > hof-model > lodash:
+        patched: '2020-05-04T03:59:17.171Z'
+    - hof > hof-theme-govuk > hof-template-partials > lodash:
+        patched: '2020-05-04T03:59:17.171Z'
+    - hof > hof-form-wizard > hof-form-controller > hof-behaviour-hooks > lodash:
+        patched: '2020-05-04T03:59:17.171Z'
+    - hof > hof-form-wizard > hof-form-controller > hof-behaviour-session > lodash:
+        patched: '2020-05-04T03:59:17.171Z'
+    - hof-build > npm-sass > node-sass > sass-graph > lodash:
+        patched: '2020-05-04T03:59:17.171Z'
+    - hof-build > npm-sass > node-sass > gaze > globule > lodash:
+        patched: '2020-05-04T03:59:17.171Z'
