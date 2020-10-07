@@ -6,7 +6,9 @@
     "test": "npm run test:lint",
     "test:lint": "eslint .",
     "build": "hof-build",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
     "govuk-frontend": "^3.5.0",
@@ -18,7 +20,8 @@
     "hof-template-mixins": "^5.0.1",
     "hof-theme-govuk": "^4.3.0",
     "hof-util-countries": "^1.0.0",
-    "typeahead-aria": "^1.0.4"
+    "typeahead-aria": "^1.0.4",
+    "snyk": "^1.410.3"
   },
   "devDependencies": {
     "eslint": "^3.14.0",
@@ -32,5 +35,6 @@
   "description": "",
   "engines": {
     "node": "10.11.0"
-  }
+  },
+  "snyk": true
 }
