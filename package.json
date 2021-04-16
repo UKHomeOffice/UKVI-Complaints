@@ -5,6 +5,7 @@
   },
   "scripts": {
     "start": "node app.js",
+    "inspect": "node --inspect app.js",
     "start:dev": "hof-build watch --env",
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "eslint .",
