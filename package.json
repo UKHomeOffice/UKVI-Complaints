@@ -6,12 +6,18 @@
   "scripts": {
     "start": "node app.js",
     "start:dev": "hof-build watch --env",
-    "test": "npm run test:lint && npm run test:unit",
+    "start:mock": "node app.js silent mock-sqs",
+    "test": "npm run sqs-setup && npm run test:sqs:server",
     "test:lint": "eslint .",
-    "test:unit": "nyc --report-dir=test/coverage --reporter=lcov mocha \"test/unit/**/*.spec.js\" --timeout 10000 --require test/test-helpers.js -- $npm_package_config_reporter/unit.json",
+    "test:unit": "nyc --report-dir=test/coverage --reporter=lcov mocha \"test/unit/**/*.spec.js\" --require test/test-helpers.js -- $npm_package_config_reporter/unit.json",
     "test:check": "mocha \"test/unit/**/*.spec.js\"",
+    "test:integration": "mocha \"test/integration/**/*.spec.js\" --require test/test-helpers.js test/integration/integration-test-helpers.js --timeout 10000 --browser-engine=chromium",
+    "test:sqs:server": "start-server-and-test start:mock http://localhost:8080/reason?automation-test test:integration",
+    "sqs-setup": "docker build -t sqs-mock test/integration/sqs-mock && docker run --name sqs-mock -p 9324:9324 -d sqs-mock",
+    "sqs-cleanup": "docker stop sqs-mock && docker container rm sqs-mock",
     "build": "hof-build",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "posttest": "npm run sqs-cleanup"
   },
   "dependencies": {
     "govuk-frontend": "^3.5.0",
@@ -40,9 +46,11 @@
     "mocha-multi-reporters": "^1.5.1",
     "mochawesome": "^6.2.2",
     "nyc": "^15.1.0",
+    "playwright": "^1.10.0",
     "proxyquire": "^2.1.3",
     "sinon": "^9.2.4",
-    "sinon-chai": "^3.6.0"
+    "sinon-chai": "^3.6.0",
+    "start-server-and-test": "^1.12.1"
   },
   "name": "ukvi-complaints",
   "version": "1.0.0",
