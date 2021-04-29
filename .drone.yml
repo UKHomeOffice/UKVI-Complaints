@@ -21,7 +21,6 @@ steps:
   commands:
     - npm i -s && npm run build
     - npm test
-    - npm run test:ui:server
   when:
     branch: [ master, feature/* ]
     event: push
