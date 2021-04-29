@@ -31,7 +31,17 @@ steps:
   commands:
     - npm i -s && npm run build
     - npm test
-    - npm run sqs-cleanup
+  when:
+    branch: [ master, feature/* ]
+    event: push
+
+- name: mock-sqs-cleanup
+  pull: if-not-exists
+  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+  commands:
+    # wait for docker service to be up before running docker build
+    - n=0; while [ "$n" -lt 60 ] && [ ! docker stats --no-stream ]; do n=$(( n + 1 )); sleep 1; done
+    - docker stop sqs-mock && docker container rm sqs-mock
   when:
     branch: [ master, feature/* ]
     event: push
