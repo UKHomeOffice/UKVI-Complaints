@@ -4,20 +4,33 @@ name: default
 type: kubernetes
 
 steps:
-- name: build
-  pull: if-not-exists
-  image: node:14
-  commands:
-  - npm --loglevel warn install
-  - npm run test
-  when:
-    branch: [ master, feature/* ]
-    event: push
 
 - name: redis-test-service
   pull: if-not-exists
   image: redis
   detach: true
+  when:
+    branch: [ master, feature/* ]
+    event: push
+
+- name: test
+  pull: if-not-exists
+  image: mcr.microsoft.com/playwright:bionic
+  environment:
+    NOTIFY_KEY: USE_MOCK
+  commands:
+    - npm i -s && npm run build
+    - npm test
+    - npm run test:ui:server
+  when:
+    branch: [ master, feature/* ]
+    event: push
+
+- name: build
+  pull: if-not-exists
+  image: node:14
+  commands:
+  - npm --loglevel warn install
   when:
     branch: [ master, feature/* ]
     event: push

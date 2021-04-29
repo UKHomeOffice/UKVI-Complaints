@@ -7,7 +7,7 @@
     "start": "node app.js",
     "start:dev": "hof-build watch --env",
     "start:mock": "node app.js silent mock-sqs",
-    "test": "npm run sqs-setup && npm run test:sqs:server",
+    "test": "npm run test:sqs:server",
     "test:lint": "eslint .",
     "test:unit": "nyc --report-dir=test/coverage --reporter=lcov mocha \"test/unit/**/*.spec.js\" --require test/test-helpers.js -- $npm_package_config_reporter/unit.json",
     "test:check": "mocha \"test/unit/**/*.spec.js\"",
@@ -16,8 +16,7 @@
     "sqs-setup": "docker build -q -t sqs-mock test/integration/sqs-mock && docker run --name sqs-mock -p 9324:9324 -d sqs-mock",
     "sqs-cleanup": "docker stop sqs-mock && docker container rm sqs-mock",
     "build": "hof-build",
-    "postinstall": "npm run build",
-    "posttest": "npm run sqs-cleanup"
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "govuk-frontend": "^3.5.0",
