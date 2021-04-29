@@ -15,7 +15,7 @@ steps:
 
 - name: mock-sqs-setup
   pull: if-not-exists
-  image: docker:dind
+  image: docker:latest
   commands:
     # wait for docker service to be up before running docker build
     - n=0; while [ "$n" -lt 60 ] && [ ! -e /var/run/docker.sock ]; do n=$(( n + 1 )); sleep 1; done
