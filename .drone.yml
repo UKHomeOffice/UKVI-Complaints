@@ -13,14 +13,28 @@ steps:
     branch: [ master, feature/* ]
     event: push
 
+- name: mock-sqs-setup
+  pull: if-not-exists
+  image: docker:dind
+  commands:
+    # wait for docker service to be up before running docker build
+    - n=0; while [ "$n" -lt 60 ] && [ ! -e /var/run/docker.sock ]; do n=$(( n + 1 )); sleep 1; done
+    - npm run sqs-setup
+  volumes:
+    - name: dockersock
+      path: /var/run
+  when:
+    branch: [ master, feature/* ]
+    event: push
+
 - name: test
   pull: if-not-exists
   image: mcr.microsoft.com/playwright:bionic
   environment:
-    NOTIFY_KEY: USE_MOCK
   commands:
     - npm i -s && npm run build
     - npm test
+    - npm run sqs-cleanup
   when:
     branch: [ master, feature/* ]
     event: push
