@@ -46,10 +46,8 @@ describe('\'Other reason\' complaint', () => {
     await submitPage();
 
     // retrieve queue and assert it is length 1
-    // const queue = await sqs.get();
-    // expect(queue.Messages.length).to.equal(1);
-
-    expect(await page.url()).to.equal(baseURL + '/confirm');
+    const queue = await sqs.get();
+    expect(queue.Messages.length).to.equal(1);
 
   });
 
