@@ -37,6 +37,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "aws-sdk": "^2.888.0",
     "@danmasta/mocha-sonar": "^1.0.0",
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",

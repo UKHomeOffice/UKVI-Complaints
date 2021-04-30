@@ -8,7 +8,7 @@ const SQS = AWS.SQS;
 async function get() {
   const queue = new SQS({
     endpoint: 'http://localhost:9324',
-    region: 'eu-west-2', // it does not matter
+    region: 'eu-west-2',
     accessKeyId: 'example',
     secretAccessKey: 'example'
   });

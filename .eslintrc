@@ -5,6 +5,12 @@ env:
   es6: true
   mocha: true
 
+parserOptions:
+  ecmaVersion: 8
+
+rules:
+  consistent-return: off
+
 overrides:
 - files:
     "test/**/*.js"

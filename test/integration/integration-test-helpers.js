@@ -1,14 +1,15 @@
 'use strict';
 
+/* eslint no-console: off */
+
 const playwright = require('playwright');
 global.baseURL = 'http://localhost:8080';
 
 before(async() => {
   try {
     console.log('Launching chromium');
-
-    global.browser = await playwright['chromium'].launch();
-  } catch(e) {
+    global.browser = await playwright.chromium.launch();
+  } catch (e) {
     console.log('Error launching chromium');
     console.log(e);
   }
