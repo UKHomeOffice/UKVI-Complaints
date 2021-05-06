@@ -20,7 +20,12 @@ module.exports = {
     },
     emailCaseworker: true,
   },
-  awsSqs: {
+  awsSqs: process.argv.some(arg => arg === 'mock-sqs') ? {
+    region: 'eu-west-2',
+    queueUrl: 'http://localhost:9324/queue/first-queue',
+    accessKeyId: 'stub',
+    secretAccessKey: 'stub',
+  } : {
     region: process.env.AWS_REGION || 'eu-west-2',
     queueUrl: process.env.SQS_URL || 'http://localhost:4566/000000000000/local-queue',
     accessKeyId: process.env.ACCESS_KEY_ID || '',

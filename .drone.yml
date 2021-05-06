@@ -4,12 +4,31 @@ name: default
 type: kubernetes
 
 steps:
+- name: redis-test-service
+  pull: if-not-exists
+  image: redis
+  detach: true
+  when:
+    branch: [ master, feature/* ]
+    event: push
+
+- name: test
+  pull: if-not-exists
+  image: mcr.microsoft.com/playwright:bionic
+  environment:
+  commands:
+    - npm i -s && npm run build
+    - npm test
+    - npm run test:integration:server
+  when:
+    branch: [ master, feature/* ]
+    event: push
+
 - name: build
   pull: if-not-exists
   image: node:14
   commands:
-  - npm --loglevel warn install
-  - npm run test
+    - npm --loglevel warn install
   when:
     branch: [ master, feature/* ]
     event: push
@@ -125,5 +144,12 @@ steps:
 services:
   - name: docker
     image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+
+  - name: mock-sqs
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+    commands:
+      # wait for docker service to be up before running docker build
+      - n=0; while [ "$n" -lt 60 ] && [ ! docker stats --no-stream ]; do n=$(( n + 1 )); sleep 1; done
+      - docker build -q -t sqs-mock test/integration/sqs-mock && docker run --name sqs-mock -p 9324:9324 -d sqs-mock
 
 ...
