@@ -5,47 +5,46 @@ const proxyquire = require('proxyquire');
 
 describe('SendToSQS', () => {
   let res;
-  let req;
-  let badReq;
-  let badDataReq;
   let nextStub;
   let SendToSQS;
   let testSendToSQS;
   let formatComplaintDataStub;
   let sendToQueueStub;
   let validAgainstSchemaStub;
+  let logToKibanaStub;
   let uuidStub;
+  let testError;
+
+  const req = {
+      sessionModel: {
+        attributes: 'test attributes'
+      }
+    };
+  const badReq = {
+      sessionModel: {
+        attributes: 'bad attributes'
+      }
+    };
+  const badDataReq = {
+      sessionModel: {
+        attributes: 'bad data'
+      }
+    };
 
   const testUuid = '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d';
-
+  const testMessageId = '76cc4b05-de7a-4b39-bc2f-064f81155eaa';
+  const sqsProducerResponse = [{ MessageId: testMessageId }];
   const complaintData = {
     data: 'test'
   };
   const badComplaintData = {
     data: 'error'
   };
-  const testError = new Error('testError');
 
   class Base {}
 
   beforeEach(() => {
-    req = {
-      sessionModel: {
-        attributes: 'test attributes'
-      }
-    };
-
-    badReq = {
-      sessionModel: {
-        attributes: 'bad attributes'
-      }
-    };
-
-    badDataReq = {
-      sessionModel: {
-        attributes: 'bad data'
-      }
-    };
+    testError = new Error('testError');
 
     nextStub = sinon.stub();
 
@@ -53,12 +52,14 @@ describe('SendToSQS', () => {
 
     validAgainstSchemaStub = sinon.stub().returns(true);
 
+    logToKibanaStub = sinon.stub();
+
     formatComplaintDataStub = sinon.stub().returns(complaintData);
     formatComplaintDataStub.withArgs(badReq.sessionModel.attributes).throws(testError);
     formatComplaintDataStub.withArgs(badDataReq.sessionModel.attributes).returns(badComplaintData);
 
     sendToQueueStub = sinon.stub();
-    sendToQueueStub.withArgs(complaintData, testUuid).resolves();
+    sendToQueueStub.withArgs(complaintData, testUuid).resolves(sqsProducerResponse);
     sendToQueueStub.withArgs(badComplaintData, testUuid).rejects(testError);
 
     const Behaviour = proxyquire('../../../../apps/ukvi-complaints/behaviours/send-to-sqs', {
@@ -68,6 +69,7 @@ describe('SendToSQS', () => {
       '../lib/utils': {
         validAgainstSchema: validAgainstSchemaStub,
         sendToQueue: sendToQueueStub,
+        logToKibana: logToKibanaStub,
       },
       'uuid': {
         v4: uuidStub
@@ -115,13 +117,30 @@ describe('SendToSQS', () => {
         expect(formatComplaintDataStub).to.have.been.calledOnceWith(req.sessionModel.attributes);
       });
 
-      it('sendToQueue should be called once with complaint data', () => {
+      it('sendToQueue should be called once with complaint data and complaint id', () => {
         testSendToSQS.saveValues(req, res, nextStub);
-        expect(sendToQueueStub).to.have.been.calledOnceWith(complaintData);
+        expect(sendToQueueStub).to.have.been.calledOnceWith(complaintData, testUuid);
       });
 
+      it('should call logToKibana with success message and complaint details', () => {
+        const log = {
+          sqsResponse: sqsProducerResponse,
+          complaintDetails: {
+            sqsMessageId: testMessageId,
+            complaintId: testUuid,
+            data: complaintData
+          }
+        };
+
+        return testSendToSQS.saveValues(req, res, nextStub)
+          .then(() => {
+            expect(logToKibanaStub).to.have.been.calledOnceWith('Successfully sent to SQS queue: ', log);
+          });
+      });
+
+
       it('next should be called once with no arguments', () => {
-        testSendToSQS.saveValues(req, res, nextStub)
+        return testSendToSQS.saveValues(req, res, nextStub)
         .then(() => {
           expect(nextStub).to.have.been.calledOnceWith();
         });
@@ -131,31 +150,62 @@ describe('SendToSQS', () => {
     });
 
     describe('If invalid complaint data', () => {
+      it('should call logToKibana with failed message and the error', () => {
+        testSendToSQS.saveValues(badReq, res, nextStub);
+        expect(logToKibanaStub).to.have.been.calledOnceWith('Failed to send to SQS queue: ', testError);
+      });
+
+      it('should set complaintDetails on the error from the sessionModel', () => {
+        testSendToSQS.saveValues(badReq, res, nextStub);
+         expect(testError.complaintDetails).to.eql({
+           complaintId: testUuid,
+           data: badReq.sessionModel.attributes
+         });
+      });
+
+
       it('should pass the error to the next middleware', () => {
-       testSendToSQS.saveValues(badReq, res, nextStub);
+        testSendToSQS.saveValues(badReq, res, nextStub);
         expect(nextStub).to.have.been.calledOnceWith(testError);
       });
 
-      it('should add formNotSubmitted flag to the error', () => {
+      it('should set formNotSubmitted on the error', () => {
         testSendToSQS.saveValues(badReq, res, nextStub);
          expect(testError.formNotSubmitted).to.eql(true);
        });
     });
 
     describe('If sendToQueue rejects', () => {
+      it('should call logToKibana with failed message and the error', () => {
+        return testSendToSQS.saveValues(badDataReq, res, nextStub)
+          .then(() => {
+            expect(logToKibanaStub).to.have.been.calledOnceWith('Failed to send to SQS queue: ', testError);
+          });
+      });
+
+      it('should set formatted complaint details on the error', () => {
+        return testSendToSQS.saveValues(badDataReq, res, nextStub)
+          .then(() => {
+            expect(testError.complaintDetails).to.eql({
+              complaintId: testUuid,
+              data: badComplaintData
+            });
+          });
+      });
+
       it('should pass the error to the next middleware', () => {
-       testSendToSQS.saveValues(badDataReq, res, nextStub)
-        .then(() => {
-          expect(nextStub).to.have.been.calledOnceWith(testError);
-        });
+       return testSendToSQS.saveValues(badDataReq, res, nextStub)
+          .then(() => {
+            expect(nextStub).to.have.been.calledOnceWith(testError);
+          });
 
       });
 
       it('should add formNotSubmitted flag to the error', () => {
-        testSendToSQS.saveValues(badDataReq, res, nextStub)
-        .then(() => {
-          expect(testError.formNotSubmitted).to.eql(true);
-        });
+        return testSendToSQS.saveValues(badDataReq, res, nextStub)
+          .then(() => {
+            expect(testError.formNotSubmitted).to.eql(true);
+          });
       });
     });
   });

@@ -17,7 +17,6 @@ const validAgainstSchema = (data, validator) => {
   }
 };
 
-
 const sendToQueue = (data, id) => {
   try {
     const producer = Producer.create(config.awsSqs);
@@ -31,18 +30,7 @@ const sendToQueue = (data, id) => {
           }
         ])
       .then((response) => {
-        const log = {
-          sqsResponse: response,
-          complaintDetails: {
-            sqsMessageId: response[0].MessageId,
-            complaintId: id,
-            data
-          }
-        };
-
-        // eslint-disable-next-line no-console
-        console.log('Successfully sent to SQS queue: ', log);
-        resolve();
+        resolve(response);
       })
       .catch(error => {
         reject(error);
@@ -53,7 +41,15 @@ const sendToQueue = (data, id) => {
   }
 };
 
+const logToKibana = (message, data) => {
+  if (process.env.NODE_ENV !== 'test') {
+    // eslint-disable-next-line no-console
+    console.log(message, data);
+  }
+};
+
 module.exports = {
   validAgainstSchema,
   sendToQueue,
+  logToKibana,
 };

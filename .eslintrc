@@ -5,6 +5,9 @@ env:
   es6: true
   mocha: true
 
+rules:
+  no-process-env: off
+
 overrides:
 - files:
     "test/**/*.js"
