@@ -4,6 +4,7 @@ const Emailer = require('hof-behaviour-emailer');
 const path = require('path');
 const moment = require('moment');
 
+// eslint-disable-next-line complexity
 const getDataRows = (model, translate) => {
   return [
     {

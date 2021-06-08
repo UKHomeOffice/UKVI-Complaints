@@ -18,10 +18,12 @@
     "hof-template-mixins": "^5.0.1",
     "hof-theme-govuk": "^4.3.0",
     "hof-util-countries": "^1.0.0",
+    "jquery": "^3.6.0",
+    "moment": "^2.29.1",
     "typeahead-aria": "^1.0.4"
   },
   "devDependencies": {
-    "eslint": "^3.14.0",
+    "eslint": "^5.16.0",
     "eslint-config-homeoffice": "^2.1.0"
   },
   "name": "ukvi-complaints",

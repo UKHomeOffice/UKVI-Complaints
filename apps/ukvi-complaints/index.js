@@ -1,4 +1,5 @@
 'use strict';
+/* eslint-disable consistent-return */
 
 const config = require('../../config');
 const conditionalContent = require('./behaviours/conditional-content');
@@ -675,22 +676,6 @@ module.exports = {
         condition: {
           field: 'refund-type-automatic',
           value: 'eu-settlement'
-        }
-      }]
-    },
-    '/refund-when': {
-      fields: ['refund-when'],
-      forks: [{
-        target: '/refund-less-than',
-        condition: {
-          field: 'refund-when',
-          value: 'less-than'
-        }
-      }, {
-        target: '/refund-more-than',
-        condition: {
-          field: 'refund-when',
-          value: 'more-than'
         }
       }]
     },
