@@ -50,8 +50,7 @@ steps:
   commands:
     - git clone https://$${DRONE_GIT_USERNAME}:$${DRONE_GIT_TOKEN}@github.com/UKHomeOffice/kube-ukvi-complaints.git
     - cd kube-ukvi-complaints
-    - git tag dev-${DRONE_COMMIT_SHA}
-    - git push origin --tags
+    - if ! [ $(git tag -l dev-${DRONE_COMMIT_SHA}) ]; then git tag dev-${DRONE_COMMIT_SHA} && git push origin --tags; fi
   when:
     branch: master
     event: push
@@ -67,8 +66,7 @@ steps:
   commands:
     - git clone https://$${DRONE_GIT_USERNAME}:$${DRONE_GIT_TOKEN}@github.com/UKHomeOffice/kube-ukvi-complaints.git
     - cd kube-ukvi-complaints
-    - git tag ${DRONE_DEPLOY_TO}-${DRONE_COMMIT_SHA}
-    - git push origin --tags
+    - if ! [ $(git tag -l ${DRONE_DEPLOY_TO}-${DRONE_COMMIT_SHA}) ]; then git tag ${DRONE_DEPLOY_TO}-${DRONE_COMMIT_SHA} && git push origin --tags; fi
   when:
     event: promote
     target: [ preprod, prod ]
