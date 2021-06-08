@@ -11,11 +11,11 @@ module.exports = {
     password: process.env.REDIS_PASSWORD
   },
   email: {
-    from: process.env.FROM_ADDRESS || '',
-    replyTo: process.env.REPLY_TO || '',
+    from: process.env.FROM_ADDRESS || 'stub@stub.stub',
+    replyTo: process.env.REPLY_TO || 'stub@stub.stub',
     transport: process.env.EMAIL_TRANSPORT || 'stub',
-    caseworker: process.env.CASEWORKER_EMAIL || '',
-    recipient: process.env.CASEWORKER_EMAIL || '',
+    caseworker: process.env.CASEWORKER_EMAIL || 'stub@stub.stub',
+    recipient: process.env.CASEWORKER_EMAIL || 'stub@stub.stub',
     transportOptions: {
       accessKeyId: process.env.HOF_SES_USER || process.env.AWS_USER || '',
       secretAccessKey: process.env.HOF_SES_PASSWORD || process.env.AWS_PASSWORD || ''

@@ -31,6 +31,6 @@
   "author": "",
   "description": "",
   "engines": {
-    "node": "10.11.0"
+    "node": "14.16.1"
   }
 }
