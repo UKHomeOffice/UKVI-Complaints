@@ -9,11 +9,11 @@ module.exports = {
     password: process.env.REDIS_PASSWORD
   },
   email: {
-    from: process.env.FROM_ADDRESS || 'stub@stub.com',
-    replyTo: process.env.REPLY_TO || 'stub@stub.com',
-    transport: process.env.EMAIL_TRANSPORT || 'stub',
-    caseworker: process.env.CASEWORKER_EMAIL || 'stub@stub.com',
-    recipient: process.env.CASEWORKER_EMAIL || 'stub@stub.com',
+    from: process.env.FROM_ADDRESS || '',
+    replyTo: process.env.REPLY_TO || '',
+    transport: process.env.EMAIL_TRANSPORT || 'ses',
+    caseworker: process.env.CASEWORKER_EMAIL || '',
+    recipient: process.env.CASEWORKER_EMAIL || '',
     transportOptions: {
       accessKeyId: process.env.HOF_SES_USER || process.env.AWS_USER || '',
       secretAccessKey: process.env.HOF_SES_PASSWORD || process.env.AWS_PASSWORD || ''
